@@ -4,7 +4,8 @@ const createCubic = require('../services/createCubic.js');
 const router = Router();
 
 router.get('/',(req, res) => {
-     res.render('index',{products: createCubic.getAll});
+    let products = createCubic.getAll(req.query)
+     res.render('index',{products});
 });
 
 router.get('/create', (req, res) => {
@@ -16,14 +17,15 @@ router.get('/details/:id', (req, res) => {
 
     res.render('details',{products: id,})
 
-})
+});
 
 router.post('/create', (req, res) => {
     let data = req.body;
 
-    createCubic.create(data);
+    createCubic.create(data)
+        .then(() => res.redirect('/products'))
 
-    res.redirect('/products')
+    
 });
 
 module.exports = router;

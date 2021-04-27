@@ -1,10 +1,24 @@
 const Cubic = require('../models/Cubic.js');
 let db = require('../config/database');
 const uniqid = require('uniqid');
-const fs = require('fs');
+const fs = require('fs/promises');
 
-function getAll() {
-    return db
+function getAll(query) {
+    let results = db
+
+    if(query.search) {    
+        results = results.filter(x => x.name.toLowerCase().includes(query.search.toLowerCase()))
+    }
+
+    if(query.from) {
+        results = results.filter(x => x.difficultyLevel >= query.from)
+    }
+
+    if(query.to) {
+        results = results.filter(x => x.difficultyLevel <= query.to)
+    }
+
+    return results
 }
 
 function findOne(id) {
@@ -22,7 +36,9 @@ function create(data) {
 
     db.push(cubic);
 
-    fs.writeFile(__dirname + '/../config/database.json',JSON.stringify(db), (err) => {
+    return fs.writeFile(
+        __dirname + '/../config/database.json',
+        JSON.stringify(db), (err) => {
         if (err) {
             console.log(err);
             return;
