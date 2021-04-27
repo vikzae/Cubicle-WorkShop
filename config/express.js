@@ -8,8 +8,11 @@ module.exports = (app) => {
         extname:'hbs'
     }));
     
-    app.set('view engine','hbs')
-    app.use(express.static('static'))
+    app.set('view engine','hbs');
+    app.use(express.static('static'));
+    app.use(express.urlencoded({
+        extended: true,
+    }))
     
     //TODO: Setup the view engine
 
