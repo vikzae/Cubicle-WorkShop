@@ -10,9 +10,9 @@ router.get('/create', (req, res) => {
 
 router.get('/attach/:id', async (req, res) => {
     let id = req.params.id;
-    let accessory = await accessoryModel.find();
-    let cube = await cubeModel.findById({_id: id});
-    
+    let cube = await cubeModel.findById(id);
+    let accessory = await accessoryModel.find({_id: {$nin: cube.accesories}});
+
     res.render('attachAccessory',{accessory: accessory, cube: cube})
 });
 
