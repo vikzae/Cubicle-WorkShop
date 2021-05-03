@@ -7,17 +7,12 @@ module.exports = (app) => {
     app.engine('hbs', handlebars({
         extname:'hbs'
     }));
-    
-    app.set('view engine','hbs');
-    app.use(express.static('static'));
+    //TODO: Setup the view engine
+    app.set('view engine','hbs')
+    //TODO: Setup the body parser
     app.use(express.urlencoded({
         extended: true,
     }))
-    
-    //TODO: Setup the view engine
-
-    //TODO: Setup the body parser
-
     //TODO: Setup the static files
-
+    app.use(express.static('static'))
 };
