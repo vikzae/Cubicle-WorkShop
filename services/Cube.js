@@ -7,14 +7,27 @@ const create = data => {
         imageUrl: data.imageUrl,
         level: data.level,
     });
-    
-    cube.save();
 
-    return  cube;
+    return  cube.save();
 };
 // sort to add
-const getAll = data => {
-    return Cube.find({}).lean();
+const getAll = async (query) => {
+    let cube = await Cube.find({});
+    console.log(query.search);
+
+    if(query.search) {
+        cube = cube.filter(x => x.name.toLowerCase().includes(query.search.toLowerCase()));
+    };
+
+    if(query.from) {
+        cube = cube.filter(x => x.level >= query.from);
+    }
+
+    if(query.to) {
+        cube = cube.filter(x => x.level <= query.to)
+    }
+
+    return cube 
 };
 
 const getOne = id => {
