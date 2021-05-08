@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 module.exports = (app) => {
 
-    mongoose.connect('mongodb://localhost/CubeShop', {useNewUrlParser: true, useUnifiedTopology: true});
+    mongoose.connect('mongodb://localhost/CubeShop', {useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false});
 
     const db = mongoose.connection;
 

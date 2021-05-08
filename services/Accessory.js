@@ -9,10 +9,8 @@ const create = data => {
         description: data.description,
         imageUrl: data.imageUrl,
     });
-
-    accessory.save();
     
-    return accessory;
+    return accessory.save();
 }
 
 const getAll = () => {
@@ -20,7 +18,7 @@ const getAll = () => {
 }
 
 const getOne = id => {
-    return Accessory.findById(id)
+    return Accessory.findById(id);
 };
 
 const attachAccessory = async (cubeId, accessoryId) => {
@@ -30,16 +28,9 @@ const attachAccessory = async (cubeId, accessoryId) => {
     cube.accesories.push(accessory);
     return cube.save();
 };
-const allIdAccessories = (obj) => {
-    let data = obj.map((id) => {
-        
-    })
-    return data
-}
 module.exports = {
     create: create,
     getAll: getAll,
     getOne: getOne,
     attachAccessory: attachAccessory,
-    allIdAccessories: allIdAccessories
 }

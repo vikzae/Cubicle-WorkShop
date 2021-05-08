@@ -1,31 +1,58 @@
 const { Router } = require('express');
 const router = Router();
 const cube = require('../services/Cube');
-const cubeModel = require('../models/Cube')
+const cubeModel = require('../models/Cube');
+const auth = require('../middleware/auth');
 
-router.get('/', async (req, res) => {
+router.get('/',auth,(req, res) => {
+    cube.getAll(req.query)
+        .then((data) => {
+            res.render('index',{products: data,user:req.user});
+        });
+});
+
+router.get('/create', auth, (req, res) => {
+    res.render('create', {user: req.user});
+});
+
+router.get('/edit/:id', async (req, res) => {
+    let cube = await cubeModel.findOne({_id: req.params.id})
     
-    let products = await cube.getAll(req.query);
-    res.render('index',{products: products})
+    res.render('editCube', {cube: cube})
 });
 
-router.get('/create', (req, res) => {
-    res.render('create')
+router.get('/delete/:id', (req,res) => {
+    let cubeId = req.params.id;
+
+    cubeModel.findByIdAndRemove(cubeId)
+        .then(() => {
+            res.redirect('/products')
+        })
 });
+
+router.post('/edit/:id', (req, res ) => {
+    let cube = req.body;
+    cubeModel.findOneAndUpdate({_id: req.params.id}, cube, {returnNewDocument: true})
+        .then(() => {
+            res.redirect('/products')
+        })
+})
 
 router.post('/create', (req, res) => {
     let data = req.body;
 
     cube.create(data)
-        .then(() => {res.redirect('/products')})
-    
+        .then(() => {res.redirect('/products')});
 });
 
-router.get('/details/:id',async (req, res) => {
+router.get('/details/:id', auth,(req, res) => {
     let id = req.params.id;
-    let product = await cubeModel.findById(id).populate('accesories')
-        
-    res.render('details',{product: product,accessory: product.accesories});
+    
+    cubeModel.findById(id).populate('accesories')
+        .then((data) => {
+            res.render('details',{product: data, accessory: data.accesories, user: req.user});
+        })
+    
 });
 
 module.exports = router;
