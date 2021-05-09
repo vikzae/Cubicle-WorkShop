@@ -3,7 +3,6 @@ var jwt = require('jsonwebtoken');
 const userService = require('../services/User');
 const User = require('../models/User');
 let bcrypt = require('bcrypt');
-const saltRounds = 1;
 const secret = 'muchSecret';
 
 router.get('/register' , (req, res) => {
@@ -33,15 +32,17 @@ router.post('/login', async (req, res) => {
         .catch(err => console.log(err))
 })
 
-router.post('/register', (req, res) => {
-    //chack if passwords are indenticle
-    let {username, password} = req.body;
-    bcrypt.hash(password, saltRounds)
-        .then((hashedPassword) => {
-            console.log(hashedPassword);
-            userService.create(username, hashedPassword);
-            res.redirect('/auth/login')
-        });
+router.post('/register', async (req, res) => {
+    let {username, password, repeatPassword} = req.body;
+    let user =  await User.findOne({username: username});
+
+    if(password == repeatPassword && user == null) {
+        userService.hashPasswordAndCreateUser(username, password)
+        res.redirect('/auth/login')  
+    } else {
+        res.write('Username already exists or passwords dont match');
+        res.end();
+    }
 })
 
 module.exports = router;

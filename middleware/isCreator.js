@@ -11,7 +11,7 @@ const isCreator = async (req, res, next) => {
             if (req.user._id == user._id) {
                 req.creator = true;
             }
-            req.data = data;
+            req.cube = data;
             next();
         })
     }

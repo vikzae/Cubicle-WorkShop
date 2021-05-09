@@ -16,10 +16,14 @@ router.get('/create', auth, (req, res) => {
     res.render('create', {user: req.user});
 });
 
-router.get('/edit/:id', async (req, res) => {
-    let cube = await cubeModel.findOne({_id: req.params.id})
+router.get('/edit/:id',auth,isCreator, async (req, res) => {
     
-    res.render('editCube', {cube: cube})
+    if(!isCreator) {
+        res.redirect('/products')
+        return
+    }
+    let cube = req.cube
+    res.render('editCube', {cube: cube,user: req.user})
 });
 
 router.get('/delete/:id', (req,res) => {
@@ -32,7 +36,7 @@ router.get('/delete/:id', (req,res) => {
 });
 
 router.get('/details/:id', auth, isCreator,(req, res) => {
-    res.render('details',{product: req.data, accessory: req.data.accesories, user: req.user, creator: req.creator});
+    res.render('details',{product: req.cube, accessory: req.cube.accesories, user: req.user, creator: req.creator});
     
 });
 
