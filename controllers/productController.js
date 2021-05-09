@@ -3,6 +3,7 @@ const router = Router();
 const cube = require('../services/Cube');
 const cubeModel = require('../models/Cube');
 const auth = require('../middleware/auth');
+const isCreator = require('../middleware/isCreator')
 
 router.get('/',auth,(req, res) => {
     cube.getAll(req.query)
@@ -30,6 +31,11 @@ router.get('/delete/:id', (req,res) => {
         })
 });
 
+router.get('/details/:id', auth, isCreator,(req, res) => {
+    res.render('details',{product: req.data, accessory: req.data.accesories, user: req.user, creator: req.creator});
+    
+});
+
 router.post('/edit/:id', (req, res ) => {
     let cube = req.body;
     cubeModel.findOneAndUpdate({_id: req.params.id}, cube, {returnNewDocument: true})
@@ -38,21 +44,19 @@ router.post('/edit/:id', (req, res ) => {
         })
 })
 
-router.post('/create', (req, res) => {
-    let data = req.body;
+router.post('/create', auth, (req, res) => {
+    let {name, description, imageUrl, level} = req.body;
+    let user = req.user;
 
-    cube.create(data)
+    cube.create({
+        name: name,
+        description: description,
+        imageUrl: imageUrl,
+        level: level,
+        users: user,
+    })
         .then(() => {res.redirect('/products')});
 });
 
-router.get('/details/:id', auth,(req, res) => {
-    let id = req.params.id;
-    
-    cubeModel.findById(id).populate('accesories')
-        .then((data) => {
-            res.render('details',{product: data, accessory: data.accesories, user: req.user});
-        })
-    
-});
 
 module.exports = router;

@@ -6,6 +6,7 @@ const create = data => {
         description: data.description,
         imageUrl: data.imageUrl,
         level: data.level,
+        users: data.users
     });
 
     return  cube.save();

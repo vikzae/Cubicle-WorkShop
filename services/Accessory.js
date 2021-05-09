@@ -33,4 +33,4 @@ module.exports = {
     getAll: getAll,
     getOne: getOne,
     attachAccessory: attachAccessory,
-}
+};

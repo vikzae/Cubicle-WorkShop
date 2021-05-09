@@ -12,7 +12,8 @@ const authenticate = (req, res, next) => {
             next();
         });
     } else {
-        res.redirect('/auth/register')
+        res.redirect('/auth/register');
     }
+
 }
-module.exports = authenticate
+module.exports = authenticate;

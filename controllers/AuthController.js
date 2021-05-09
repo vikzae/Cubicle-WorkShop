@@ -21,9 +21,10 @@ router.get('/logout', (req, res) => {
 })
 
 router.post('/login', async (req, res) => {
-    let user = await User.findOne(req.body.user);
+    let user = await User.findOne({username: req.body.username});
+    
     bcrypt.compare(req.body.password,user.password)
-        .then(boolen => {
+        .then(() => {
             var token = jwt.sign({_id: user._id,username: user.username}, secret);
             
             res.cookie('user', token);

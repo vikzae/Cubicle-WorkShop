@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const Accessory = require('./Accessory');
 
 const CubeShema = new mongoose.Schema({
     name: {
@@ -24,8 +23,13 @@ const CubeShema = new mongoose.Schema({
     },
     accesories: [{
         type: mongoose.Types.ObjectId,
-        ref: 'Accessory'
-    }]
+        ref: 'accessory'
+    }],
+    users: [{
+        type: mongoose.Types.ObjectId,
+        required: true,
+        ref: 'users'
+    }],
 });
 
 const Cube = mongoose.model('Cube', CubeShema);
