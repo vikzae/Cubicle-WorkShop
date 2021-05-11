@@ -7,7 +7,7 @@ const isCreator = async (req, res, next) => {
         .then((data) => {
             req.creator = false;
             let user = data.users[0];
-
+            
             if (req.user._id == user._id) {
                 req.creator = true;
             }

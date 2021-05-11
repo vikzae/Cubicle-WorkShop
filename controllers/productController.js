@@ -5,51 +5,52 @@ const cubeModel = require('../models/Cube');
 const auth = require('../middleware/auth');
 const isCreator = require('../middleware/isCreator')
 
-router.get('/',auth,(req, res) => {
+router.get('/', auth, (req, res) => {
     cube.getAll(req.query)
         .then((data) => {
-            res.render('index',{products: data,user:req.user});
+            res.render('index', { products: data, user: req.user });
         });
 });
 
 router.get('/create', auth, (req, res) => {
-    res.render('create', {user: req.user});
+    res.render('create', { user: req.user });
 });
 
-router.get('/edit/:id',auth,isCreator, async (req, res) => {
-    
-    if(!isCreator) {
-        res.redirect('/products')
-        return
+router.get('/edit/:id', auth, isCreator, async (req, res) => {
+    if (req.creator) {
+        let cube = req.cube;
+        res.render('editCube', { cube: cube, user: req.user });
+        return;
     }
-    let cube = req.cube
-    res.render('editCube', {cube: cube,user: req.user})
+    res.redirect('/products');
 });
 
-router.get('/delete/:id', (req,res) => {
+router.get('/delete/:id', auth, isCreator, (req, res) => {
     let cubeId = req.params.id;
-
-    cubeModel.findByIdAndRemove(cubeId)
-        .then(() => {
-            res.redirect('/products')
-        })
+    if (req.creator) {
+        cubeModel.findByIdAndRemove(cubeId)
+            .then(() => {
+                res.redirect('/products');
+            })
+    }
+    res.redirect('/products');
 });
 
-router.get('/details/:id', auth, isCreator,(req, res) => {
-    res.render('details',{product: req.cube, accessory: req.cube.accesories, user: req.user, creator: req.creator});
-    
+router.get('/details/:id', auth, isCreator, (req, res) => {
+    res.render('details', { product: req.cube, accessory: req.cube.accesories, user: req.user, creator: req.creator });
+
 });
 
-router.post('/edit/:id', (req, res ) => {
+router.post('/edit/:id', (req, res) => {
     let cube = req.body;
-    cubeModel.findOneAndUpdate({_id: req.params.id}, cube, {returnNewDocument: true})
+    cubeModel.findOneAndUpdate({ _id: req.params.id }, cube, { returnNewDocument: true })
         .then(() => {
             res.redirect('/products')
         })
 })
 
 router.post('/create', auth, (req, res) => {
-    let {name, description, imageUrl, level} = req.body;
+    let { name, description, imageUrl, level } = req.body;
     let user = req.user;
 
     cube.create({
@@ -59,7 +60,7 @@ router.post('/create', auth, (req, res) => {
         level: level,
         users: user,
     })
-        .then(() => {res.redirect('/products')});
+        .then(() => { res.redirect('/products') });
 });
 
 

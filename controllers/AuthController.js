@@ -1,48 +1,54 @@
 const router = require('express').Router();
-var jwt = require('jsonwebtoken');
 const userService = require('../services/User');
 const User = require('../models/User');
+const isGuest = require('../middleware/isGuest');
 let bcrypt = require('bcrypt');
-const secret = 'muchSecret';
 
-router.get('/register' , (req, res) => {
-    
+router.get('/register', isGuest, (req, res) => {
     res.render('register');
 });
 
-router.get('/login', (req, res) => {
+router.get('/login', isGuest, (req, res) => {
     res.render('login');
 });
 
 router.get('/logout', (req, res) => {
     res.clearCookie('user');
-    res.redirect('/auth/login')
-})
+    res.redirect('/auth/login');
+});
 
 router.post('/login', async (req, res) => {
-    let user = await User.findOne({username: req.body.username});
-    
-    bcrypt.compare(req.body.password,user.password)
-        .then(() => {
-            var token = jwt.sign({_id: user._id,username: user.username}, secret);
-            
-            res.cookie('user', token);
-            res.redirect('/products');
-        })
-        .catch(err => console.log(err))
-})
+    let {username, password} = req.body;
+
+    try {
+        let token = await userService.login(username, password);
+
+        res.cookie('user', token);
+        res.redirect('/products')
+    } catch (error) {
+        res.render('login', {error: error})
+    }
+});
 
 router.post('/register', async (req, res) => {
     let {username, password, repeatPassword} = req.body;
-    let user =  await User.findOne({username: username});
+    try {
+        let hashedPassword = await userService.hashPassword(password);
+        let user = await userService.create(username, hashedPassword);
+        res.redirect('/products')
+    } catch(err) {
+            let error = Object.keys(err.errors).map(x => err.errors[x].properties.message)
 
-    if(password == repeatPassword && user == null) {
-        userService.hashPasswordAndCreateUser(username, password)
-        res.redirect('/auth/login')  
-    } else {
-        res.write('Username already exists or passwords dont match');
-        res.end();
+        res.render('register', {error})
     }
-})
+
+    // if(password == repeatPassword && user != null) {
+    //     userService.hashPasswordAndCreateUser(username, password)
+    //     res.redirect('/auth/login')  
+    // } else {
+    //     res.write('Username already exists or passwords dont match');
+    //     res.end();
+    // }
+});
 
 module.exports = router;

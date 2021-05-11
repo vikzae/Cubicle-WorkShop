@@ -1,23 +1,36 @@
 const User = require('../models/User');
-let bcrypt = require('bcrypt');
-const saltRounds = 1;
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
-const create = (username, password) => {
+const saltRounds = 1;
+const secret = 'muchSecret';
+
+
+const create = async (username, password) => {
     let user = new User({
         username: username,
         password: password
     });
-
-    return user.save()
+    return await user.save()
 };
-const hashPasswordAndCreateUser = (username,password) => {
-    bcrypt.hash(password, saltRounds)
-    .then((hashedPassword) => {
-    create(username, hashedPassword);
-    });
-}
+
+const hashPassword = (password) => {
+    return bcrypt.hash(password, saltRounds)
+};
+
+const login = async (username, password) => {
+    let user = await User.findOne({username});
+    if (!user) throw 'User not found!';
+
+    let isMatched = await bcrypt.compare(password,user.password);
+    if (!isMatched) throw 'Wrong password';
+
+    let token = jwt.sign({_id: user._id,username: user.username}, secret);
+    return token
+};
 
 module.exports = {
+    login: login,
     create: create,
-    hashPasswordAndCreateUser: hashPasswordAndCreateUser,
+    hashPassword: hashPassword,
 };

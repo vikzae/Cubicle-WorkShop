@@ -133,6 +133,8 @@ div.details {
     padding: 1em;
 }
 
+
+    
 span {
     font-weight: bolder;
     font-size: 17px;
@@ -238,6 +240,7 @@ h2{
     text-align: center;
 }
 
+
 .accessories .accessory{
     display: inline-block;
     background-color: #f3f3f2;
@@ -259,6 +262,19 @@ footer {
     font-size: 20px;
 }
 
+#notifications {
+    margin: 0 auto;
+    margin-top: 0px;
+    text-align: center;
+    width: 50%;
+    padding: 0.5;
+    margin-top: 2%;
+    margin-bottom: 2%;
+    background: rgb(231, 118, 118);
+    color: white;
+    border-radius: 5px;
+    text-decoration: underline;
+}
 /*Animations & Transitions
 */
 

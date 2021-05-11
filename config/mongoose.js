@@ -10,4 +10,7 @@ module.exports = (app) => {
     db.once('open', function() {
     console.log('db connected');
     });
+    mongoose.set('useNewUrlParser', true);
+    mongoose.set('useFindAndModify', false);
+    mongoose.set('useCreateIndex', true);
 }
