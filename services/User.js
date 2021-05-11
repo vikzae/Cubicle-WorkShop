@@ -29,6 +29,10 @@ const login = async (username, password) => {
     return token
 };
 
+const sumNubers = () => {
+    console.log(1 + 1);
+};
+
 module.exports = {
     login: login,
     create: create,
