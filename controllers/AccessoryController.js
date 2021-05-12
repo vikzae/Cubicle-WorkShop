@@ -26,13 +26,16 @@ router.post('/attach/:id', (req, res) => {
 
 });
 
-router.post('/create',  (req, res) => {
+router.post('/create', async (req, res) => {
     let data = req.body;
-    
-    Accessory.create(data)
-        .then((data) => {
-            res.redirect('/products');
-        })
+    try {
+       let accessory = await Accessory.create(data);
+       res.redirect('/products')
+    } catch (err) {
+        let error = Object.keys(err.errors).map(x => err.errors[x].properties.message);
+
+        res.render('createAccessory', {error})
+    }
     
 })
 

@@ -49,18 +49,23 @@ router.post('/edit/:id', (req, res) => {
         })
 })
 
-router.post('/create', auth, (req, res) => {
+router.post('/create', auth, async (req, res) => {
     let { name, description, imageUrl, level } = req.body;
     let user = req.user;
+    try{
+        let newCube = await cube.create({
+            name: name,
+            description: description,
+            imageUrl: imageUrl,
+            level: level,
+            users: user,
+        });
+        res.redirect('/products')
+    } catch(err){
+        let error = Object.keys(err.errors).map(x => err.errors[x].properties.message);
 
-    cube.create({
-        name: name,
-        description: description,
-        imageUrl: imageUrl,
-        level: level,
-        users: user,
-    })
-        .then(() => { res.redirect('/products') });
+        res.render('create', {error})
+    }
 });
 
 

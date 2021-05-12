@@ -32,23 +32,16 @@ router.post('/login', async (req, res) => {
 
 router.post('/register', async (req, res) => {
     let {username, password, repeatPassword} = req.body;
+    let hashedPassword = await userService.hashPassword(password);
+
     try {
-        let hashedPassword = await userService.hashPassword(password);
         let user = await userService.create(username, hashedPassword);
-        res.redirect('/products')
+        res.redirect('/products');
     } catch(err) {
-            let error = Object.keys(err.errors).map(x => err.errors[x].properties.message)
+        let error = Object.keys(err.errors).map(x => err.errors[x].properties.message);
 
         res.render('register', {error})
     }
-
-    // if(password == repeatPassword && user != null) {
-    //     userService.hashPasswordAndCreateUser(username, password)
-    //     res.redirect('/auth/login')  
-    // } else {
-    //     res.write('Username already exists or passwords dont match');
-    //     res.end();
-    // }
 });
 
 module.exports = router;
