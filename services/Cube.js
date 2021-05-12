@@ -1,6 +1,6 @@
 const Cube = require('../models/Cube');
 
-const create = data => {
+const create = async (data) => {
     let cube = new Cube ({
         name: data.name,
         description: data.description,
@@ -9,7 +9,7 @@ const create = data => {
         users: data.users
     });
 
-    return  cube.save();
+    return await cube.save();
 };
 
 const getAll = async (query) => {

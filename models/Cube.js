@@ -1,14 +1,32 @@
 const mongoose = require('mongoose');
-
+const regexCube = /^[a-zA-Z1-9.-_\s]{5,}$/;
+const regexDescription = /^[a-zA-Z1-9.-_\s]{20,}$/;
 const CubeShema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
+        unique: true,
+        validate: {
+            validator: (name) => {
+            return regexCube.test(name)                
+            },
+            message: () => {
+                return `Cube must be atleast 5 length long and Еnglish latters!`
+            }
+        }
     },
     description: {
         type: String,
         required: true,
-        max: 50,
+        unique: true,
+        validate: {
+            validator: (description) => {
+            return regexDescription.test(description)                
+            },
+            message: () => {
+                return `Description must be atleast 5 length long and Еnglish latters!`
+            }
+        }
     },
     imageUrl: {
         type: String,
