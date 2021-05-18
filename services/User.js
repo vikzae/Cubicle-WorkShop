@@ -32,7 +32,9 @@ const login = async (username, password) => {
 const sumNubers = () => {
     console.log('123');
 };
-
+const alabala = () => {
+    console.log('alabala');
+}
 const sumCbues = () => {
     console.log('sumCubes');
 }
