@@ -30,10 +30,10 @@ const login = async (username, password) => {
 };
 
 const sumNubers = () => {
-    console.log('123');
+    console.log('viksa');
 };
-const alabala = () => {
-    console.log('alabala');
+const lola = () => {
+    console.log('loga');
 }
 const sumCbues = () => {
     console.log('sumCubes');
