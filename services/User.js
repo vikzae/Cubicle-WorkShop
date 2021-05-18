@@ -33,6 +33,10 @@ const sumNubers = () => {
     console.log(1 + 1 + 1);
 };
 
+const sumCbues = () => {
+    console.log('sumCubes');
+}
+
 module.exports = {
     login: login,
     create: create,
