@@ -30,7 +30,7 @@ const login = async (username, password) => {
 };
 
 const sumNubers = () => {
-    console.log('hey');
+    console.log('123');
 };
 
 const sumCbues = () => {
