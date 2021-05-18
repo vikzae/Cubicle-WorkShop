@@ -30,7 +30,7 @@ const login = async (username, password) => {
 };
 
 const sumNubers = () => {
-    console.log('hey');
+    console.log('viksa');
 };
 const lola = () => {
     console.log('loga');
